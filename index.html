@@ -13,12 +13,12 @@
   $(function(){
     $.ajax({
       method:'GET',
-      url:'demo.js',
+      url:'/demo.js',
       success: function(data){
        console.log(data);
       },
-      error:function(){
-        console.log('请求失败')
+      error:function(err){
+        console.log(err,'请求失败')
       }
     });
     $('.box').html('123')

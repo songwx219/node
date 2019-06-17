@@ -1,23 +1,27 @@
 var fs = require("fs");
 var data = '';
+var http = require("http");
+var url = require("url");
+ 
+http.createServer(function (request, response) {
+    var pathname = url.parse(request.url).pathname;
+    console.log("Request for " + pathname + " received.");
 
-// 创建可读流
-var readerStream = fs.createReadStream('demo.txt');
+    response.writeHead(200, {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "X-Requested-With",
+      "Access-Control-Allow-Methods":"PUT,POST,GET,DELETE,OPTIONS",
+       "Content-Type": "text/plain",
+   });
 
-// 设置编码为 utf8。
-readerStream.setEncoding('UTF8');
-
-// 处理流事件 --> data, end, and error
-readerStream.on('data', function(chunk) {
-   data += chunk;
-});
-
-readerStream.on('end',function(){
-   console.log(data);
-});
-
-readerStream.on('error', function(err){
-   console.log(err.stack);
-});
-
-console.log("程序执行完毕");
+   var data = fs.readFileSync('demo.txt');// 创建可读流
+   fs.readFile('demo.txt', function (err, data) {
+      if (err) {
+          return err;
+      }
+      response.write(data.toString());response.end();
+   });
+   
+   
+}).listen(8080);
+console.log("Server has started.");
