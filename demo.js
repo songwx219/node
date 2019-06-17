@@ -8,9 +8,9 @@ http.createServer(function (request, response) {
     console.log("Request for " + pathname + " received.");
 
     response.writeHead(200, {
-      // "Access-Control-Allow-Origin": "*",
-      // "Access-Control-Allow-Headers": "X-Requested-With",
-      // "Access-Control-Allow-Methods":"PUT,POST,GET,DELETE,OPTIONS",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "X-Requested-With",
+      "Access-Control-Allow-Methods":"PUT,POST,GET,DELETE,OPTIONS",
        "Content-Type": "text/plain",
    });
 
