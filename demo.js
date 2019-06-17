@@ -14,14 +14,14 @@ http.createServer(function (request, response) {
        "Content-Type": "text/plain",
    });
 
-   var data = fs.readFileSync('demo.txt');// 创建可读流
-   fs.readFile('demo.txt', function (err, data) {
-      if (err) {
-          return err;
-      }
-      response.write(data.toString());response.end();
-   });
-   
+   // var data = fs.readFileSync('demo.txt');// 创建可读流
+   // fs.readFile('demo.txt', function (err, data) {
+   //    if (err) {
+   //        return err;
+   //    }
+   //    response.write(data.toString());response.end();
+   // });
+   response.write('1222');response.end();
    
 }).listen(8080);
 console.log("Server has started.");
