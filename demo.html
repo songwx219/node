@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="js/jquery.min.js"></script>
+    <style>
+    #canvas{position: fixed;left: 0; top: 0; right: 0; bottom: 0;width: 100%; height: 100%;}
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>   
+<script>
+    var canvas = $("#canvas")[0];
+    var ctx = canvas.getContext("2d");
+    var screenW=window.innerWidth;
+    var screenH=window.innerHeight;
+    
+    var n = 5;//一次性发射的烟火的数量
+    var fireworkList = [];//存放所有烟火对象
+
+    canvas.width=screenW;
+    canvas.height=screenH;
+
+    // ctx.globalCompositeOperation = 'destination-out';
+    
+
+    class Blossom{
+        constructor(x,y){
+            this.sx=x;
+            this.sy=y;
+            this.state=true;
+
+            this.randR=0.8+Math.ceil(Math.random()*6)/10;
+            this.angle=Math.ceil(Math.random()*2000*Math.PI)/1000;
+            this.step=0.2;
+            this.color=randomColor();
+
+            this.g=2+Math.ceil(Math.random()*15)/10;//模拟重力
+            this.a=0.1;
+            this.num=0;
+
+            this.points=[];
+            this.r=[];
+            this.light=[]
+        }
+        init(){
+            var count=0;
+            var initRPos=[40,80,150];
+            function random(n){
+                return Math.floor(Math.random()*n);
+            }
+            
+            this.sx+=(initRPos[random(initRPos.length)]*(Math.sin(this.angle))+random(50)).toFixed(2)-0;
+            this.sy-=(initRPos[random(initRPos.length)]*(Math.cos(this.angle))+random(20)).toFixed(2)-0;
+            
+            while((this.randR-this.step*count).toFixed(2)>0.01){
+                this.r.unshift((this.randR-this.step*count).toFixed(2)-0);
+                this.sx+=(this.r[0]*Math.sin(this.angle)*1.2).toFixed(2)-0;
+                this.sy-=(this.r[0]*Math.cos(this.angle)*1.2).toFixed(2)-0;
+                this.points.push([this.sx,this.sy]);
+                this.light.unshift((0.8-0.15*count).toFixed(2)-0);
+                count+=0.5;   
+            }
+            this.draw();
+        }
+        update(){
+            if(this.points.length==0){
+                this.init();
+                // this.draw();
+            }else{
+                if(this.num<5){
+                    this.sx+=Math.sin(this.angle).toFixed(2)-0;
+                    this.sy-=Math.cos(this.angle).toFixed(2)-0;
+                    this.points.shift();
+                    this.points.push([this.sx,this.sy]);
+                    this.num++;
+                }else if(this.num<15){
+                    
+                    this.sx+=Math.sin(this.angle).toFixed(2)/Math.pow(2,this.num-5);
+                    this.sy+=this.g/3;
+                    this.points.shift();
+                    this.points.push([this.sx,this.sy]);
+                    this.num++;
+                    this.sx+=Math.sin(this.angle).toFixed(2)/Math.pow(2,this.num-5);
+                    this.sy+=this.g/3;
+                    this.points.shift();
+                    this.points.push([this.sx,this.sy]);
+                    this.g+=this.a;
+                    this.num++;
+                }else{
+                    this.g+=this.a;
+                    this.sy+=this.g;
+                    for(let i=0;i<this.points.length;i++){
+                        this.points[i]=[this.sx,this.sy-(this.points.length-i)]
+                    }
+                }
+                
+                this.draw();
+                
+                if(!this.state){
+                    this.light=this.light.map((val)=>{
+                        if(val>=0.03)return val-0.03;
+                        else return 0;
+                    }); 
+                }
+                if(this.light.every((val)=>{return val<=0.01})){
+                    return 'del';
+                }
+            }     
+        }
+        draw(){
+            // ctx.globalCompositeOperation = 'lighter';
+            ctx. beginPath();
+            ctx.lineWidth=1;
+            for(let i=0;i<this.points.length;i++){
+                
+                ctx.arc( this.points[i][0], this.points[i][1], this.r[i], 0, Math.PI * 2 );
+                ctx.fillStyle=this.color.replace(')',','+this.light[i]+')');
+                ctx.fill();
+                ctx.strokeStyle=this.color.replace(')',','+this.light[i]+')');
+                ctx.stroke();
+            }
+            
+        }
+    }
+
+    class BlastCenter{
+        constructor(x,y){
+            this.x=x;
+            this.y=y;
+            this.r=0;
+        }
+        update(){
+            this.r+=4;
+            ctx. beginPath();
+            ctx.lineWidth=4;
+            ctx.arc( this.x, this.y, this.r, 0, Math.PI * 2 );
+            ctx.strokeStyle='rgba(255,255,255,0.7)';
+            ctx.stroke();
+            ctx.lineWidth=8;
+            ctx.arc( this.x, this.y, this.r+2, 0, Math.PI * 2 );
+            ctx.strokeStyle='rgba(255,255,255,0.3)';
+            ctx.stroke();
+            ctx.lineWidth=12;
+            ctx.arc( this.x, this.y, this.r+4, 0, Math.PI * 2 );
+            ctx.strokeStyle='rgba(255,255,255,0.1)';
+            ctx.stroke();
+            if(this.r<20){
+                return 0;
+            }else{return 1;}
+        }
+    }
+
+    class FireWork{
+        constructor(){
+            this.x=0;
+            this.y=0;
+            this.listBlastCenter={};
+            this.listBlossom=[];
+            this.numBlossom=120;
+        }
+        randomRang(min,max){
+            return (Math.random()*(max-min)+min).toFixed(2)-0;
+        }
+        init(){
+            this.x=this.randomRang(200,screenW-200);
+            this.y=this.randomRang(100,screenH-100);
+            
+            this.listBlossom=[];
+            var num=this.numBlossom;
+            this.listBlastCenter= new BlastCenter(this.x, this.y);
+            while(num>0){
+                this.listBlossom.push(new Blossom(this.x,this.y));
+                num--;
+            }
+        }
+        play(){
+            this.init();
+            var state=0,hide;
+            setTimeout(function(){state=2},1000);
+
+            var timeId=setInterval(()=>{
+
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.fillStyle = 'rgba(0, 0, 0)';
+                ctx.fillRect( 0, 0, screenW, screenH );
+
+                if(state==0){
+                    state=this.listBlastCenter.update();
+                }else{
+                    if(this.listBlossom.length>0){
+                        for(let i=0;i<this.listBlossom.length;i++){
+                            if(state==2) this.listBlossom[i].state=false;
+                            hide=this.listBlossom[i].update();
+                            if(hide=='del'){
+                                this.listBlossom.splice(i,1);
+                                i--;
+                            }
+                        }
+                    }else{
+                        this.play();
+                        clearInterval(timeId);
+                    }
+                }  
+            },1000/60);
+        }
+    }
+
+    (function(){
+        
+        new FireWork().play();
+        
+    })();
+    // (new Blossom(screenW/2, screenH/2)).update();
+
+    function randomColor() {
+        var r = Math.floor(Math.random() * 256);
+        var g = Math.floor(Math.random() * 256);
+        var b = Math.floor(Math.random() * 256);
+        var color = 'rgb($r, $g, $b)';
+        color = color.replace('$r', r);
+        color = color.replace('$g', g);
+        color = color.replace('$b', b);
+        return color;
+    }
+</script>    
+</body>
+</html>
