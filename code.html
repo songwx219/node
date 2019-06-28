@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="js/jquery.min.js"></script>
+    <style>
+        *{padding: 0;margin: 0; box-sizing: border-box; -webkit-box-sizing: border-box;}
+        .form{margin-top: 250px; }
+        .form strong{float: left; margin:0 20px;}
+        .form .code{float: left; width: 322px; height: 35px; text-align: center; line-height: 35px; cursor: pointer; border: 1px solid #ccc; position: relative;}
+        .code_box{display: none; width: 322px; padding: 10px; border: 1px solid #ccc;user-select: none; position: absolute; bottom: 0; left: 0; background: #fff;}
+        .code_box canvas{width: 300px; height: 150px; margin-bottom: 15px; background: #aaa;}
+        .code_box .slider{position: relative; line-height: 40px; text-align: center;}
+        .code_box .slider_cont{width: 100%; height: 40px; font-size: 13px; color: #333; border: 1px solid #ddd; background: #f5f5f5; border-radius: 5px;}
+        .code_box .slider_done{position: absolute; left: 0; top: 0; display: none; width: 40px; width: 0; height: 40px;border: 1px solid rgb(48, 179, 255); background: #d1f2ff; border-radius: 5px;}
+        .code_box .slider_block{position: absolute; left: 0; top: 0; width: 40px; height: 40px; cursor: pointer; border: 1px solid #999; box-shadow: 0 0 2px rgba(0,0,0,0.5); border-radius: 5px; background: #fff;}
+        .code_box .slider_block:hover{background: rgb(46, 84, 253); color: #fff;}
+        .code_box .slider.drag .slider_block{background: rgb(46, 84, 253); color: #fff;}
+        .code_box .slider.drag .text{display: none;}
+        .code_box .slider.err .slider_block{border-color: #f00; background: #f66;}
+        .code_box .slider.err .slider_done{border-color: #f00; background: #fcc;}
+        .code_box .loading{display: none; position: absolute;left: 0; top: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.7);}
+        .code_box .loading.show{display: block;} 
+    </style>
+</head>
+<body>
+    
+    <div class="form">
+        <div>
+            <strong>验证码</strong>
+            <div class="code">
+                <span>点击完成安全验证</span>
+                <div class="code_box">
+                    <canvas id="VerifiCode"></canvas>
+                    <div class="slider">
+                        <div class="slider_cont"><span class="text">向右拖动滑块填充拼图</span></div>
+                        <div class="slider_done"></div>
+                        <div class="slider_block">></div>
+                    </div>
+                    <div class="loading"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+$(function(){
+    
+    $('.form span').on('click',function(){
+        $(this).siblings('.code_box').show();
+    })
+    
+    class dragImg{
+        constructor(){
+            this.x=0;
+            this.y=0;
+            this.img='';
+            this.canvas=$('#VerifiCode')[0];
+            this.ctx=this.canvas.getContext("2d");
+            this.width=600;
+            this.height=300;
+            this.jigsawR=20;
+            this.shapeArr=[];
+            this.curX=0;
+            this.init();
+            this.addEvent();
+        }
+        init(){
+            this.curX=0;
+            var jigsawShape=['concave','convex','flat'];
+            this.shapeArr=[
+                jigsawShape[Math.floor(Math.random()*3)],
+                jigsawShape[Math.floor(Math.random()*3)],
+                jigsawShape[Math.floor(Math.random()*3)],
+                jigsawShape[Math.floor(Math.random()*3)]
+            ];
+            this.canvas.width=this.width;
+            this.canvas.height=this.height;
+            
+            this.x=Math.ceil(Math.random()*200)+300;
+            this.y=Math.ceil(Math.random()*200)+20;
+
+            this.img =new Image();
+            this.img.src = "images/111.png";
+            this.img.onload=()=>{this.update(10);}
+            
+        }
+        addEvent(){
+            var that=this;
+            var status=false;
+            var sx=0;
+            
+            $('.slider_block').on('mousedown',function(e){
+                status=true;
+                sx=e.clientX;
+                $('.slider').addClass('drag');
+                $(document).on('mouseup',function(e){
+                    status=false;
+                    if(that.curX>=that.x-4&&that.curX<=that.x+4){
+                        alert('succ')
+                    }else{
+                        $('.slider').addClass('err');
+                        $('.code_box .loading').addClass('show');
+                        setTimeout(function(){
+                            $('.slider').removeClass('err');
+                            $('.slider').removeClass('drag');
+                            $('.code_box .loading').removeClass('show');
+                            $('.slider_block').css('transform','translateX(0px)');
+                            $('.slider_done').css({'display':'none','width':`0px`});
+                            that.init();
+                        },500);
+                    }
+                });
+            });
+            $(document).on('mousemove',function(e){
+                if(status){
+                    if(e.clientX-sx>=-2&&e.clientX-sx<=262){
+                        $('.slider_block').css('transform',`translateX(${e.clientX-sx}px)`);
+                        $('.slider_done').css({'display':'block','width':`${e.clientX-sx+20}px`});
+                        that.update(e.clientX-sx+10);
+                    }
+                }
+            });
+            
+        }
+        update(x){
+            this.curX=2*x;
+
+            this.ctx.clearRect(0,0,this.width,this.height);
+            this.ctx.fillStyle="#000000";
+            this.ctx.fillRect(0,0,this.width,this.height);
+            
+            this.ctx.drawImage(this.img, 0, 0,this.width,this.height); 
+            this.draw(this.x,this.y);
+            this.ctx.save();
+    
+            this.draw(2*x,this.y);
+            this.ctx.clip();
+            this.ctx.drawImage(this.img, 2*x-this.x, 0,this.width,this.height);
+            this.ctx.restore();
+        }
+        draw(x,y){
+            var ctx=this.canvas.getContext("2d");
+            var r=this.jigsawR;
+            var size=this.jigsawR*4;
+            var shapeArr=this.shapeArr;
+
+            ctx.beginPath();
+            ctx.moveTo(x,y);   // 创建开始点
+            ctx.fillStyle="rgba(255,255,255,0.6)";
+            ctx.strokeStyle='rgba(255,255,255,0.8)';
+            ctx.shadowOffsetX = -r/10; // 阴影横向位移
+            ctx.shadowOffsetY = -r/10; // 阴影纵向位移
+            ctx.shadowColor = 'rgba(0,0,0,0.3)'; // 阴影颜色
+            ctx.shadowBlur = r/10*3; // 阴影模糊范围
+            ctx.lineWidth=r/5;
+            var bulge=0;
+            for(let i=0;i<4;i++){
+                switch(i){
+                    case 0:
+                        if(shapeArr[0]!='flat'){
+                            ctx.lineTo(x,y+r);
+                            bulge=shapeArr[0]=='concave'?x+r:x-r;
+                            ctx.arcTo(bulge,y+r,bulge,y+2*r,r); // 创建弧
+                            ctx.arcTo(bulge,y+3*r,x,y+3*r,r);
+                            ctx.lineTo(x,y+4*r);
+                        }else{
+                            ctx.lineTo(x,y+size);
+                        };
+                        break;
+                    case 1:
+                        if(shapeArr[1]!='flat'){
+                            ctx.lineTo(x+r,y+4*r);
+                            bulge=shapeArr[0]=='concave'?y+3*r:y+5*r;
+                            ctx.arcTo(x+r,bulge,x+2*r,bulge,r); // 创建弧
+                            ctx.arcTo(x+3*r,bulge,x+3*r,y+4*r,r);
+                            ctx.lineTo(x+4*r,y+4*r);
+                        }else{
+                            ctx.lineTo(x+size,y+size);
+                        };
+                        break;
+                    case 2:
+                        if(shapeArr[2]!='flat'){
+                            ctx.lineTo(x+size,y+3*r);
+                            bulge=shapeArr[2]=='concave'?x+3*r:x+5*r;
+                            ctx.arcTo(bulge,y+3*r,bulge,y+2*r,r); // 创建弧
+                            ctx.arcTo(bulge,y+r,x+size,y+r,r);
+                            ctx.lineTo(x+size,y);
+                        }else{
+                            ctx.lineTo(x+size,y);
+                        };
+                        break;
+                    case 3:
+                        if(shapeArr[3]!='flat'){
+                            ctx.lineTo(x+3*r,y);
+                            bulge=shapeArr[3]=='concave'?y+r:y-r;
+                            ctx.arcTo(x+3*r,bulge,x+2*r,bulge,r); // 创建弧
+                            ctx.arcTo(x+r,bulge,x+r,y,r);
+                            ctx.lineTo(x,y);
+                        }else{
+                            ctx.lineTo(x,y);
+                        };
+                        break;
+                }
+            }
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+        }
+    }
+
+    var yanzheng=new dragImg();
+})
+</script>
+</body>
+</html>
