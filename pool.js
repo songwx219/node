@@ -6,5 +6,5 @@ let pool=mysql.createPool({
     password:'root',
     database:'qianli',
     connectionLimit:20
-});
+}); 
 module.exports=pool;
