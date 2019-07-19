@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>用户注册</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <header class="row navbar navbar-expand navbar-dark bg-dark">
+        <div class="col-1">
+            <span class="">logo</span>
+        </div>
+        <div class="col-7 navbar-nav">
+            <ul class="d-flex w-100 pl-0 mb-0">
+                <li><a href="#" class="nav-link">home</a></li>
+                <li class="dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">home</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </li>
+                <li><a href="#" class="nav-link">home</a></li>
+            </ul>
+        </div>
+        <div class="col-4">
+                <div class="input-group">
+                    <input type="text" class="form-control round border-light" placeholder="Recipient's username">
+                    <div class="input-group-append">
+                        <button class="btn btn-success" type="button">Button</button>
+                    </div>
+                </div>
+        </div>
+    </header>
+    <section class="login">
+        <div class="login-box">
+            <h5>用户注册</h5>
+            <form action="/user/register" method="post">
+                <table class="w-100">
+                    <tbody>
+                        <tr>
+                            <th width="80px"> 用户名：<i class="text-danger float-right">*</i></th>
+                            <td>
+                                <input class="form-control" type="text" name="uname" data-require="req" placeholder="请输入用户名">
+                                <p class="error-msg text-danger"></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>密码：<i class="text-danger float-right">*</i></th>
+                            <td>
+                                <input class="form-control" type="password" name="upwd" data-require="req" placeholder="请输入密码">
+                                <p class="error-msg text-danger"></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>验证码：<i class="text-danger float-right">*</i></th>
+                            <td>
+                                <div class="code">
+                                    <span class="btn btn-block btn-warning button"><i class="fa fa-info-circle "></i> 点击完成安全验证</span>
+                                    <div class="code_box">
+                                        <canvas id="VerifiCode"></canvas>
+                                        <div class="button text-primary d-flex align-items-center">
+                                            <div class="refresh pr-2"><i class="fa fa-refresh"></i></div>
+                                            <div class="remove"><i class="fa fa-remove"></i></div>
+                                        </div>
+                                        <div class="slider">
+                                            <div class="slider_cont"><span class="text">向右拖动滑块填充拼图 </span></div>
+                                            <div class="slider_done"></div>
+                                            <div class="slider_block"><i class="fa fa-reorder"></i></div>
+                                        </div>
+                                        <div class="loading text-danger">
+                                            <div class="box d-flex flex-column justify-content-center w-100 h-100 mr-0 "></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="text-center"><input type="submit" value="立即注册" class="btn btn-danger mt-3 w-50"></p>
+            </form>
+            <p class="text-center reg">我还已注册账号，点击<a href="/login.html">立即登录</a></p>
+        </div>
+    </section>
+    <footer class="row bg-light pt-3 pb-3">
+        <div class="col-12 text-center">songwx版权所有</div>
+    </footer>
+<script src="/js/code.js"></script>   
+<script type="text/javascript">
+    $(function(){
+      function Yanzheng(){
+        this.status=true;  //表单状态是否填写正确
+  
+        /* 表单添加失去焦点及提交事件 */
+        this.eleEvent=function(){
+          var that=this;
+          $('input.form-control').on('blur',function(){that.inputBlur($(this));})  //输入框失去焦点事件
+          $('form').on('submit',function(){return that.formSubmit();});  //表单提交事件
+        }
+  
+        /* 表单失去焦点验证 */
+        this.inputBlur=function(ele){
+          if(ele.data('require')=="req"&&$.trim(ele.val())==''){
+            ele.addClass('err');
+            ele.siblings('.error-msg').html('“*”为必填项，请填写完整！')
+            this.status=false;
+          }else if(ele.attr('name')=='uname'){
+              $.get(`/user/isRegUserExist?uname=${ele.val()}`,(data)=>{
+                  if(data.status){
+                      ele.siblings('.error-msg').html('此用户名已存在！');
+                      this.status=false;
+                  }else{
+                      ele.removeClass('err');
+                      ele.siblings('.error-msg').html('');
+                  }
+              })
+          }else{
+            ele.removeClass('err'); 
+            ele.siblings('.error-msg').html('');
+          }
+        }
+  
+        /* 表单提交时验证 */
+        this.formSubmit=function(){
+          var that=this;
+          this.status=true;
+          $('input.form-control').each(function(){
+            that.inputBlur($(this));
+          });
+          if(!that.status){
+        //    alert('注册信息有误！');
+            return false;
+          }
+        }
+      }
+  
+      (new Yanzheng()).eleEvent(); 
+    })
+  </script>        
+</div>
+</body>
+</html> 

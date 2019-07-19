@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title><%=title %></title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <header class="row navbar navbar-expand navbar-dark bg-dark">
+        <div class="col-1">
+            <span class="">logo</span>
+        </div>
+        <div class="col-4 navbar-nav">
+            <ul class="d-flex w-100 pl-0 mb-0">
+                <li><a href="#" class="nav-link">home</a></li>
+                <li class="dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">home</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </li>
+                <li><a href="#" class="nav-link">home</a></li>
+            </ul>
+        </div>
+        <div class="col-4">
+                <div class="input-group">
+                    <input type="text" class="form-control round border-light" placeholder="Recipient's username">
+                    <div class="input-group-append">
+                        <button class="btn btn-success" type="button">Button</button>
+                    </div>
+                </div>
+        </div>
+        <div class="col-3 d-flex mb-0 pr-0 justify-content-end">
+            <div>
+                <% if(login.status==1){ %>
+                <button class="btn text-light dropdown-toggle  mr-2" data-toggle="dropdown">
+                    欢迎您 <%=login.uname %>！
+                </button>
+                <% } %>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Something else here</a>
+                </div>
+            </div>
+            <div><a href="#" class="btn btn-danger mr-2">购物车</a></div>
+            <% if(login.status==0){ %>
+            <div><a href="/login.html" class="btn btn-warning">登录</a></div>
+            <% }else{ %>
+                <div><a href="/user/exit" class="btn btn-warning">退出</a></div>
+            <% } %>
+        </div>
+    </header>

@@ -1,0 +1,45 @@
+ul,ol,li{list-style: none;}
+.form-control:focus,.btn:active,.btn:focus{ }
+body{background: #f9f9f9;}
+.d-flex{margin-bottom: 0; padding: 0;}
+
+header{color: #fff;}
+header .navbar-nav li{width: 100px;}
+
+section{min-height: 400px;}
+section .main{background: #fff; margin: 0 -15px;}
+
+.index .list .card{width: 23%; overflow: hidden;}
+.index .list .card img{transition: all .5s;}
+.index .list .card img:hover{transform: scale(1.1)}
+
+.login{padding: 50px 0;}
+.login-box{width: 400px; height: 400px; padding: 30px; margin: 0 auto; position: relative; background: #fff; box-shadow: 0 0 3px 2px rgba(0,0,0,0.4);}
+.login-box h5{padding-bottom: 10px; margin-bottom: 30px; text-align: center;; border-bottom: 1px solid #999;}
+.login-box .error-msg{margin-bottom: 0px; font-size: 12px; line-height: 20px;}
+.login-box .error-msg.all{padding-left: 80px;}
+.login-box td{padding: 7px 0;}
+.login-box p.reg{position: absolute; left: 0; bottom: 0px; width: 100%;}
+.login-box input.err{border: 1px solid #f80;}
+
+.code{width: 100%; height: 35px; text-align: center; line-height: 35px; cursor: pointer; position: relative;}
+.code_box{display: none; width: 322px; padding: 10px; border: 1px solid #ccc;user-select: none; position: absolute; bottom: 0; left: 0; background: #fff;}
+.code_box canvas{width: 300px; height: 150px; margin-bottom: 15px; background: #aaa;}
+.code_box .slider{position: relative; line-height: 40px; text-align: center;}
+.code_box .slider_cont{width: 100%; height: 40px; font-size: 13px; color: #333; border: 1px solid #ddd; background: #f5f5f5; border-radius: 5px;}
+.code_box .slider_done{position: absolute; left: 0; top: 0; display: none; width: 40px; width: 0; height: 40px;border: 1px solid rgb(48, 179, 255); background: #d1f2ff; border-radius: 5px;}
+.code_box .slider_block{position: absolute; left: 0; top: 0; width: 40px; height: 40px; cursor: pointer; border: 1px solid #999; box-shadow: 0 0 2px rgba(0,0,0,0.5); border-radius: 5px; background: #fff;}
+.code_box .slider_block:hover{background: rgb(46, 84, 253); color: #fff;}
+.code_box .slider.drag .slider_block{background: rgb(46, 84, 253); color: #fff;}
+.code_box .slider.drag .text{display: none;}
+.code_box .slider.err .slider_block{border-color: #f00; background: #f66;}
+.code_box .slider.err .slider_done{border-color: #f00; background: #fcc;}
+.code_box .loading{display: none; position: absolute;left: 0; top: 0; right: 0; bottom: 0; font-weight: 700; background: rgba(255,255,255,0.7);}
+.code_box .loading.show{display: block;} 
+.code_box .loading span.fa{font-size: 22px;}
+.code_box .button{position: absolute; right: 12px; top: 12px; height: 24px; padding: 0 6px; font-size: 14px; background: rgba(255,255,255,0.6); border-radius: 5px;}
+.code_box .button>div{transition: all .5s; }
+.code_box .button .remove{font-size: 18px;}
+.code_box .button>div:hover{transform: scale(1.1); color: #f80}
+
+footer{text-align: center; color: #666;}

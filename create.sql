@@ -1,0 +1,25 @@
+SET NAMES UTF8;
+SHOW DATABASES;
+
+DROP DATABASE IF EXISTS qianli;
+CREATE DATABASE qianli CHARSET=UTF8;
+
+USE qianli;
+
+CREATE TABLE user_reg(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    uname VARCHAR(8) UNIQUE NOT NULL,
+    upwd VARCHAR(16) NOT NULL
+);
+
+CREATE TABLE user_infor(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    uid SMALLINT NOT NULL,
+    uname VARCHAR(8) UNIQUE NOT NULL,
+    uphone CHAR(11),
+    utel CHAR(12),
+    uicon VARCHAR(64) DEFAULT 'upload/user/default_icon.png',
+    uadd VARCHAR(64),
+    FOREIGN KEY(uid) REFERENCES user_reg(id)
+);
+SHOW TABLES;
