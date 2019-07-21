@@ -35,6 +35,7 @@ router.post('/register',(req,res)=>{
                     if(result1.affectedRows>0){
                         pool.query('INSERT INTO user_infor(uid,uname) VALUES(?,?)',[result1.insertId,data.uname],(err,result2)=>{
                             if(result2.affectedRows>0){
+                                res.cookie('code','',{maxAge:0,signed:true});
                                 res.cookie('uid',result1.insertId,{maxAge:3600*1000,signed:true});  //signed 表示对cookie加密
                                 res.redirect('/');
                             }
