@@ -19,7 +19,6 @@ const userRouter=require('./router/user');  //引入user模块路由
 
 app.get('/',(req,res)=>{
     const uid=req.signedCookies.uid;   //获取加密的cookie
-    console.log(uid)
     pool.query('select * from user_reg where id=?',[uid],(err,result)=>{
         if(err) throw err;
         if(result.length>0){
