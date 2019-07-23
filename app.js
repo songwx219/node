@@ -16,21 +16,37 @@ app.set( 'view engine', 'html' );
 app.engine( '.html', ejs.__express );
 
 const userRouter=require('./router/user');  //引入user模块路由
+const proRouter=require('./router/product');  //引入user模块路由
 
 app.get('/',(req,res)=>{
-    const uid=req.signedCookies.uid;   //获取加密的cookie
-    pool.query('select * from user_reg where id=?',[uid],(err,result)=>{
+    let proData={};
+    let loginData={};
+    pool.query('select id,pname,unitPrice,salePrice,pImg,pcolor,pslogan from pro_infor limit 0,4',(err,result)=>{
         if(err) throw err;
-        if(result.length>0){
-            res.render('index',{title:'home',login:{status:1,uname:result[0].uname}})
+        proData=result.length>0?{status:1,msg:result}:{status:0};
+        console.log(proData)
+        const uid=req.signedCookies.uid;   //获取加密的cookie
+        if(uid){
+            pool.query('select * from user_reg where id=?',[uid],(err,result)=>{
+                if(err) throw err;
+                if(result.length>0){
+                    loginData={status:1,uname:result[0].uname}
+                }else{
+                    loginData={status:0};
+                };
+            });
         }else{
-            res.render('index',{title:'home',login:{status:0}})
-        };
+            loginData={status:0};
+            res.render('index',{title:'home',login:loginData,pro:proData})
+        }
     });
+    
+    
     
 })
 
 app.use('/user',userRouter);
+app.use('/product',proRouter);
 
 app.use((req,res)=>{
     res.send('404 您输入的页面不存在')
