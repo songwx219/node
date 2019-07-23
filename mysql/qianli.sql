@@ -1,5 +1,5 @@
 ﻿# Host: localhost  (Version: 5.5.53)
-# Date: 2019-07-19 13:38:31
+# Date: 2019-07-23 18:02:39
 # Generator: MySQL-Front 5.3  (Build 4.234)
 
 /*!40101 SET NAMES utf8 */;
@@ -20,6 +20,82 @@ CREATE TABLE `code` (
 #
 
 REPLACE INTO `code` VALUES (1,'309','1'),(2,'356','2'),(3,'378','3'),(4,'419','4'),(5,'487','5'),(6,'414','6'),(7,'322','7'),(8,'431','8'),(9,'305','9'),(10,'496','10'),(11,'352','11'),(12,'500','12'),(13,'400','13'),(14,'385','14'),(15,'376','15'),(16,'411','16'),(17,'491','17'),(18,'391','18'),(19,'313','19'),(20,'468','20'),(21,'396','21'),(22,'408','22'),(23,'401','23'),(24,'383','24'),(25,'466','25'),(26,'440','26');
+
+#
+# Structure for table "pro_brand"
+#
+
+CREATE TABLE `pro_brand` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `BrandName` varchar(32) NOT NULL DEFAULT '',
+  `BrandEnName` varchar(32) DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+#
+# Data for table "pro_brand"
+#
+
+REPLACE INTO `pro_brand` VALUES (1,'华为','huawei'),(2,'OPPO','oppo'),(3,'VIVO','vivo'),(4,'小米','xiaomi'),(5,'苹果','apple,iphone');
+
+#
+# Structure for table "pro_detail"
+#
+
+CREATE TABLE `pro_detail` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`Id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+#
+# Data for table "pro_detail"
+#
+
+
+#
+# Structure for table "pro_infor"
+#
+
+CREATE TABLE `pro_infor` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `typeId` int(11) NOT NULL,
+  `brandId` int(11) NOT NULL,
+  `pname` varchar(32) NOT NULL,
+  `pedition` varchar(32) DEFAULT NULL,
+  `pcolor` varchar(16) DEFAULT NULL,
+  `unitPrice` decimal(10,2) DEFAULT NULL,
+  `salePrice` decimal(10,2) DEFAULT NULL,
+  `pImg` varchar(64) DEFAULT '/upload/product/default_icon.png',
+  `pslogan` varchar(32) DEFAULT NULL,
+  `isHot` tinyint(1) DEFAULT NULL,
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `pname` (`pname`),
+  KEY `typeId` (`typeId`),
+  KEY `brandId` (`brandId`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+#
+# Data for table "pro_infor"
+#
+
+REPLACE INTO `pro_infor` VALUES (1,1,1,'华为P30 PRO','全网通8G+128G','天空之镜',5499.00,5288.00,'/upload/product/0002.png','超感光徕卡三摄',1,'2019-07-23 16:55:17'),(2,1,1,'华为P30','全网通8G+64G','赤茶橘',3999.00,3888.00,'/upload/product/0001.png','逆光智能自拍',1,'2019-07-23 16:55:37'),(3,1,5,'Apple iPhone XR','内存128G','黑色',6499.00,5399.00,'/upload/product/default_icon.png','无线充电|面容ID|双卡双待',1,'2019-07-23 17:30:51'),(4,1,5,'Apple iPhone 7','公开版128GB','玫瑰金色',3299.00,2949.00,'/upload/product/default_icon.png','A10芯|ios系统|指纹识别',1,'2019-07-23 17:33:34');
+
+#
+# Structure for table "pro_type"
+#
+
+CREATE TABLE `pro_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `TypeName` varchar(8) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+
+#
+# Data for table "pro_type"
+#
+
+REPLACE INTO `pro_type` VALUES (1,'手机'),(2,'平板'),(3,'电脑'),(4,'鼠标'),(5,'键盘'),(6,'耳机');
 
 #
 # Structure for table "user_infor"
