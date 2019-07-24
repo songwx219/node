@@ -18,31 +18,48 @@ app.engine( '.html', ejs.__express );
 const userRouter=require('./router/user');  //引入user模块路由
 const proRouter=require('./router/product');  //引入user模块路由
 
+// 中间件获取用户登录信息
+app.use((req,res,next)=>{
+    const uid=req.signedCookies.uid;   //获取加密的cookie
+    if(uid){
+        pool.query('select * from user_reg where id=?',[uid],(err,result)=>{
+            if(err) throw err;
+            if(result.length>0){
+                req.query.login={status:1,uname:result[0].uname}
+            }else{
+                req.query.login={status:0};
+            };
+            next();
+        });
+    }else{
+        req.query.login={status:0}; 
+        next();
+    }
+});
+
+
 app.get('/',(req,res)=>{
-    let proData={};
-    let loginData={};
-    pool.query('select id,pname,unitPrice,salePrice,pImg,pcolor,pslogan from pro_infor limit 0,4',(err,result)=>{
-        if(err) throw err;
-        proData=result.length>0?{status:1,msg:result}:{status:0};
-        console.log(proData)
-        const uid=req.signedCookies.uid;   //获取加密的cookie
-        if(uid){
-            pool.query('select * from user_reg where id=?',[uid],(err,result)=>{
+    let hotData={};
+    let newData={};
+    let pageMsg={path:"index",title:'home'};
+    Promise.all([
+        new Promise(function(next){
+            pool.query('select id,pname,unitPrice,salePrice,pImg,pcolor,pslogan from pro_infor where isHot=1 limit 0,4',(err,result)=>{
                 if(err) throw err;
-                if(result.length>0){
-                    loginData={status:1,uname:result[0].uname}
-                }else{
-                    loginData={status:0};
-                };
+                hotData=result.length>0?{status:1,msg:result}:{status:0};
+                next();
             });
-        }else{
-            loginData={status:0};
-            res.render('index',{title:'home',login:loginData,pro:proData})
-        }
-    });
-    
-    
-    
+        }),
+        new Promise(function(next){
+            pool.query('select id,pname,unitPrice,salePrice,pImg,pcolor,pslogan from pro_infor ORDER BY id DESC limit 0,4',(err,result)=>{
+                if(err) throw err;
+                newData=result.length>0?{status:1,msg:result}:{status:0};
+                next();
+            });
+        })
+    ]).then(function(){
+        res.render('./components/main',{page:pageMsg,login:req.query.login,pro:hotData,newPro:newData})
+    })   
 })
 
 app.use('/user',userRouter);

@@ -1,6 +1,6 @@
 ul,ol,li{list-style: none;}
 .form-control:focus,.btn:active,.btn:focus{ }
-body{background: #f9f9f9;}
+body{background: #f9f9f9; font-size: 14px;}
 .d-flex{margin-bottom: 0; padding: 0;}
 
 header{color: #fff;}
@@ -8,7 +8,7 @@ header .navbar-nav li{width: 100px;}
 
 section{min-height: 400px;}
 section .main{background: #fff; margin: 0 -15px;}
-
+section .main-box{background: #fff; padding: 30px; margin: 20px auto; box-shadow: 1px 1px 5px rgba(0,0,0,0.5);}
 .index .list .card{width: 23%; overflow: hidden;}
 .index .list .card img{transition: all .5s;}
 .index .list .card img:hover{transform: scale(1.1)}
@@ -42,4 +42,18 @@ section .main{background: #fff; margin: 0 -15px;}
 .code_box .button .remove{font-size: 18px;}
 .code_box .button>div:hover{transform: scale(1.1); color: #f80}
 
+
 footer{text-align: center; color: #666;}
+
+.detail .img-box{border: 1px solid #eee; width: 100%;}
+.detail .content h2{font-size: 28px; font-weight: 400;}
+.detail .content h5{font-size: 16px; color: #888;}
+.detail .content .box{margin: 20px 0; background: #f0f0f0; padding: 15px;}
+.detail .content .box p{margin: 10px; font-size: 16px;}
+.detail .content .vip strong{font-size: 22px; color: #f60;}
+.detail .content .vip del{margin-left: 20px; color: #666;}
+.detail .content .addCart .btn{cursor: pointer;}
+.detail .content .addCart .input{padding: 0;}
+.detail .content .addCart input{height: 100%; width: 80px; border: 0; text-align: center;}
+.detail .content .addCart .goCart{margin-left: 20px; width: 150px;}
+.detail .discript{margin-top: 40px; border-top: 1px solid #ddd; padding: 30px 20px;}

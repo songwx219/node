@@ -1,0 +1,32 @@
+<section class="detail">
+<div class="container main-box">
+    <div class="row">
+        <div class="col-4 img">
+            <div class="img-box">
+                <img class="w-100" src="<%= product.msg.pImg %>" alt="">
+            </div>            
+        </div>
+        <div class="col-8 content">
+            <h2><%= product.msg.pname+' '+product.msg.pedition+' '+product.msg.pcolor %></h2>
+            <h5><%= product.msg.pslogan %></h5>
+            <div class="box">
+                <p><strong>品牌：</strong></p>
+               <p class="vip"><strong>会员价：￥ <%= product.msg.salePrice %></strong><del>￥ <%= product.msg.unitPrice %></del></p> 
+            </div>
+            <p>版本：<%= product.msg.pedition %></p>
+            <p>颜色：<%= product.msg.pcolor %></p>
+            <div class="addCart d-flex justify-content-start">
+                <div class="btn-group">
+                    <div class="btn btn-dark plus">+</div>
+                    <div class="btn btn-outline-dark input"><input type="text" readonly value="1"></div>
+                    <div class="btn btn-dark minus">-</div>
+                </div>
+                <div class="btn btn-danger goCart">加入购物车</div>
+            </div>
+        </div>
+    </div>
+    <div class="row discript">
+        详细描述
+    </div>
+</div>
+</section>

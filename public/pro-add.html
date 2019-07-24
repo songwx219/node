@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <form action="/product/addPro" method="POST">
+        <table>
+            <tbody>
+                <tr>
+                    <th>类型</th><td><input type="text" name="typeId"> </td>
+                </tr>
+                <tr>
+                    <th>品牌</th><td><input type="text" name="brandId"> </td>
+                </tr>
+                <!-- <tr>
+                    <th>规格</th><td><input type="text" name="typeId"> </td>
+                </tr> -->
+                <tr>
+                    <th>名称</th><td><input type="text" name="pname"> </td>
+                </tr>
+                <tr>
+                    <th>版本</th><td><input type="text" name="pedition"> </td>
+                </tr>
+                <tr>
+                    <th>颜色</th><td><input type="text" name="pcolor"> </td>
+                </tr>
+                <tr>
+                    <th>标语</th><td><input type="text" name="pslogan"> </td>
+                </tr>
+                <tr>
+                    <th>推荐</th><td>
+                        <input type="radio" name="isHot" value="0">否
+                        <input type="radio" name="isHot" value="1"> 是
+                    </td>
+                </tr>
+                <tr><th colspan="2"><input type="submit" value="提交"></th></tr>
+            </tbody>
+        </table>
+    </form>
+</body>
+</html>

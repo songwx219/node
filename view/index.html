@@ -1,8 +1,3 @@
-<%- include("./components/header.html") %>
-
-<script>
-console.log(<%=pro.status %>)
-</script>
 <section class="index">
     <div id="banner" class="row carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
@@ -38,9 +33,11 @@ console.log(<%=pro.status %>)
                     <% if(pro.status==1){ 
                         pro.msg.forEach(function(ele){ %>
                     <div class="card">
-                        <img src="<%= ele.pImg %>" alt="" class="card-img-top">
+                        <a href="/product/detail?id=<%= ele.id %>"><img src="<%= ele.pImg %>" alt="" class="card-img-top"></a>
                         <div class="card-body">
-                            <div class="card-title"><%= ele.pname+' | '+ele.pcolor %> <small><%= ele.pslogan %></small></div>
+                            <div class="card-title">
+                                <a href="/product/detail?id=<%= ele.id %>"><%= ele.pname+' | '+ele.pcolor %> </a>
+                                <small><%= ele.pslogan %></small></div>
                             <div class="card-text d-flex justify-content-between">
                                 <div class="price"><span><%= ele.salePrice %></span> <small><del><%= ele.unitPrice %></del></small></div>
                                 <a href="#" class="btn btn-sm btn-outline-primary" data-id="<%= ele.id %>">加入购物车</a>
@@ -53,50 +50,24 @@ console.log(<%=pro.status %>)
             <div class="box new-pro">
                 <h5>新品上架</h5>
                 <div class="list d-flex justify-content-around">
+                    <% if(newPro.status==1){ 
+                        newPro.msg.forEach(function(ele){ %>
                     <div class="card">
-                        <img src="/images/pro01.png" alt="" class="card-img-top">
+                        <a href="/product/detail?id=<%= ele.id %>"><img src="<%= ele.pImg %>" alt="" class="card-img-top"></a>
                         <div class="card-body">
-                            <div class="card-title">啊实打实记得发哈开始大幅</div>
+                            <div class="card-title">
+                                <a href="/product/detail?id=<%= ele.id %>"><%= ele.pname+' | '+ele.pcolor %> </a>
+                                <small><%= ele.pslogan %></small>
+                            </div>
                             <div class="card-text d-flex justify-content-between">
-                                <div class="price"><span>￥4500</span><small><del>￥5600</del></small></div>
-                                <a href="#" class="btn btn-sm btn-outline-primary">加入购物车</a>
+                                <div class="price"><span><%= ele.salePrice %></span> <small><del><%= ele.unitPrice %></del></small></div>
+                                <a href="#" class="btn btn-sm btn-outline-primary" data-id="<%= ele.id %>">加入购物车</a>
                             </div>
                         </div>
                     </div>
-                    <div class="card">
-                        <img src="/images/pro01.png" alt="" class="card-img-top">
-                        <div class="card-body">
-                            <div class="card-title">啊实打实记得发哈开始大幅</div>
-                            <div class="card-text d-flex justify-content-between">
-                                <div class="price"><span>￥4500</span><small><del>￥5600</del></small></div>
-                                <a href="#" class="btn btn-sm btn-outline-primary">加入购物车</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <img src="/images/pro01.png" alt="" class="card-img-top">
-                        <div class="card-body">
-                            <div class="card-title">啊实打实记得发哈开始大幅</div>
-                            <div class="card-text d-flex justify-content-between">
-                                <div class="price"><span>￥4500</span><small><del>￥5600</del></small></div>
-                                <a href="#" class="btn btn-sm btn-outline-primary">加入购物车</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <img src="/images/pro01.png" alt="" class="card-img-top">
-                        <div class="card-body">
-                            <div class="card-title">啊实打实记得发哈开始大幅</div>
-                            <div class="card-text d-flex justify-content-between">
-                                <div class="price"><span>￥4500</span><small><del>￥5600</del></small></div>
-                                <a href="#" class="btn btn-sm btn-outline-primary">加入购物车</a>
-                            </div>
-                        </div>
-                    </div>
+                    <% });} %>
                 </div>
             </div>
         </div>
     </div>
 </section>
-    
-<%- include("./components/footer.html") %>

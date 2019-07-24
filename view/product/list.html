@@ -1,0 +1,24 @@
+<section class="pro-list">
+    <div class="container main-box">
+        <div class="select-box">
+            当前选择分类：
+        </div>
+        <div class="list">
+            <table class="table">
+                <tbody>
+                    <% if(product.status==1){ 
+                        product.msg.forEach(function(ele){ %>
+                    <tr>
+                        <td><%= ele.pImg %></td>
+                        <td><%= ele.pname+' | '+ele.pcolor %></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                            
+                    <% });} %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
