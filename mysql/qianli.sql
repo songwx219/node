@@ -1,5 +1,5 @@
 ﻿# Host: localhost  (Version: 5.5.53)
-# Date: 2019-07-23 18:02:39
+# Date: 2019-07-24 18:02:49
 # Generator: MySQL-Front 5.3  (Build 4.234)
 
 /*!40101 SET NAMES utf8 */;
@@ -73,13 +73,13 @@ CREATE TABLE `pro_infor` (
   UNIQUE KEY `pname` (`pname`),
   KEY `typeId` (`typeId`),
   KEY `brandId` (`brandId`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 #
 # Data for table "pro_infor"
 #
 
-REPLACE INTO `pro_infor` VALUES (1,1,1,'华为P30 PRO','全网通8G+128G','天空之镜',5499.00,5288.00,'/upload/product/0002.png','超感光徕卡三摄',1,'2019-07-23 16:55:17'),(2,1,1,'华为P30','全网通8G+64G','赤茶橘',3999.00,3888.00,'/upload/product/0001.png','逆光智能自拍',1,'2019-07-23 16:55:37'),(3,1,5,'Apple iPhone XR','内存128G','黑色',6499.00,5399.00,'/upload/product/default_icon.png','无线充电|面容ID|双卡双待',1,'2019-07-23 17:30:51'),(4,1,5,'Apple iPhone 7','公开版128GB','玫瑰金色',3299.00,2949.00,'/upload/product/default_icon.png','A10芯|ios系统|指纹识别',1,'2019-07-23 17:33:34');
+REPLACE INTO `pro_infor` VALUES (1,1,1,'华为P30 PRO','全网通8G+128G','天空之镜',5499.00,5288.00,'/upload/product/0002.png','超感光徕卡三摄',1,'2019-07-23 16:55:17'),(2,1,1,'华为P30','全网通8G+64G','赤茶橘',3999.00,3888.00,'/upload/product/0001.png','逆光智能自拍',1,'2019-07-23 16:55:37'),(3,1,5,'Apple iPhone XR','内存128G','黑色',6499.00,5399.00,'/upload/product/0003.png','无线充电|面容ID|双卡双待',1,'2019-07-23 17:30:51'),(4,1,5,'Apple iPhone 7','公开版128GB','玫瑰金色',3299.00,2949.00,'/upload/product/0004.png','A10芯|ios系统|指纹识别',0,'2019-07-24 15:19:54'),(5,1,2,'OPPO Reno','官方标配6G+128G','星云紫',2599.00,2488.00,'/upload/product/0005.png','美颜自拍|双卡双待',1,'2019-07-24 15:17:03'),(6,1,2,'OPPO K3','标准版8G+128G','晨曦白',1899.00,1699.00,'/upload/product/0006.png','升降摄像头|VOOC闪充',0,'2019-07-24 15:19:30'),(7,1,3,'vivo Z5x','官方标配6G+128G','极光色',1698.00,1598.00,'/upload/product/0007.png','极点全面屏|强续航',1,'2019-07-24 15:21:39'),(8,1,3,'vivo iQQQ Neo','官方标配6G+128G','碳纤黑',1998.00,1899.00,'/upload/product/0008.png','液冷散热|超大电池',0,'2019-07-24 15:24:13'),(9,1,4,'小米MI 8','官方标配6G+128G','黑色',1888.00,1799.00,'/upload/product/0009.png','全面屏|后置双摄|屏下指纹',0,'2019-07-24 15:27:29');
 
 #
 # Structure for table "pro_type"
