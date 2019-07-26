@@ -65,6 +65,7 @@
                                 <input class="form-control" type="password" name="upwd" data-require="req" placeholder="请输入密码">
                                 <p class="error-msg text-danger"></p>
                             </td>
+                            <input type="hidden" name="toUrl" value="">
                         </tr>
                     </tbody>
                 </table>
@@ -78,6 +79,7 @@
     </footer>
     <script type="text/javascript">
         $(function(){
+          $('input[name="toUrl"]').val(location.search.split('callback=')[1]);
           function Yanzheng(){
             this.status=true;  //表单状态是否填写正确
       

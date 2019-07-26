@@ -9,12 +9,13 @@ router.post('/login',(req,res)=>{
 
     const name=req.body.uname;
     const pwd=req.body.upwd;
-    
+    const toulr=req.body.toUrl||'/';
     pool.query('select * from user_reg where uname=? and upwd=?',[name,pwd],(err,result)=>{
         if(err) throw err;
         if(result.length>0){
-            res.cookie('uid',result[0].id,{maxAge:3600*1000,signed:true});  //signed 表示对cookie加密
-            res.redirect('/');
+            // console.log(result[0].id)
+            req.session['uid']=result[0].id;
+            res.redirect(toulr);
         }else{
             res.send(`您的输入不正确，请重新输入！`);
         };
@@ -36,7 +37,7 @@ router.post('/register',(req,res)=>{
                         pool.query('INSERT INTO user_infor(uid,uname) VALUES(?,?)',[result1.insertId,data.uname],(err,result2)=>{
                             if(result2.affectedRows>0){
                                 res.cookie('code','',{maxAge:0,signed:true});
-                                res.cookie('uid',result1.insertId,{maxAge:3600*1000,signed:true});  //signed 表示对cookie加密
+                                req.session['uid']=result1.insertId;  //signed 表示对cookie加密
                                 res.redirect('/');
                             }
                         });  
@@ -106,7 +107,7 @@ router.get('/codeSub',(req,res)=>{
 
 /**   ==================== 用户退出 ==================== */
 router.get('/exit',(req,res)=>{
-    res.cookie('uid','',{maxAge:0,signed:true});
+    req.session['uid']=undefined;
     res.redirect('/');
 });
 

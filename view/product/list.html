@@ -5,19 +5,74 @@
         </div>
         <div class="list">
             <table class="table">
+                <thead>
+                    <th>产品图片</th>
+                    <th>产品信息</th>
+                    <th>版本信息</th>
+                    <th>价格</th>
+                    <th width="180px">操作</th>
+                </thead>
                 <tbody>
                     <% if(product.status==1){ 
                         product.msg.forEach(function(ele){ %>
                     <tr>
-                        <td><%= ele.pImg %></td>
-                        <td><%= ele.pname+' | '+ele.pcolor %></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                            
+                        <td><img class="pimg" src="<%= ele.pImg %>" alt=""></td>
+                        <td>
+                            <h5><%= ele.pname+' | '+ele.pcolor %></h5>
+                            <p>品牌：<%= ele.brand %></p>
+                            <p><%= ele.pslogan %></p>
+                        </td>
+                        <td><%= ele.pedition %></td>
+                        <td>
+                            <p><strong>会员价：<%= ele.salePrice %></strong></p>
+                            <p><del>单价：<%= ele.unitPrice %></del></p>
+                        </td>
+                        <td>
+                            <div class="addCart d-flex flex-column">
+                                <div class="btn-group">
+                                    <div class="btn btn-dark minus">-</div>
+                                    <div class="btn btn-outline-dark input"><input type="text" readonly value="1"></div>
+                                    <div class="btn btn-dark plus">+</div>
+                                    <div class="btn btn-warning goCart" data-pid="<%= ele.id %>"><i class="fa fa-shopping-cart"></i></div>
+                                </div>
+                                <a class="btn btn-outline-info mt-3" href="/product/detail?pid=<%= ele.id %>">
+                                    查看详情
+                                </a>
+                            </div>
+                        </td>
+                    </tr>       
                     <% });} %>
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="6">
+                            <div class="page">
+                                <% if(product.page.count>1){ %>
+                                <div class="btn-group btn-group-sm">
+                                    <% const pno=Number(product.page.pno); const url=product.page.url; if(pno>1){ %>
+                                        <a href="<%= url+'&pno='+(pno-1) %>" class="btn btn-outline-secondary">上一页</a>
+                                        <% if(pno>2){ %>
+                                            <% if(pno>3){ %><span class="btn btn-outline-secondary">. . .</span><% } %>
+                                            <a href="<%= url+'&pno='+(pno-2) %>" class="btn btn-outline-secondary"><%= pno-2 %></a>
+                                        <% } %>
+                                        <a href="<%= url+'&pno='+(pno-1) %>" class="btn btn-outline-secondary"><%= pno-1 %></a>
+                                    <% } %>
+                                    <a href="" class="btn btn-primary"><%= pno %></a>
+                                    <% if(pno<product.page.count){ %>
+                                        <a href="<%= url+'&pno='+(pno+1) %>" class="btn btn-outline-secondary"><%= pno+1 %></a>
+                                        <% if(pno<product.page.count-1){ %>
+                                            <a href="<%= url+'&pno='+(pno+2) %>" class="btn btn-outline-secondary"><%= pno+2 %></a>
+                                            <% if(pno<product.page.count-2){ %><span class="btn btn-outline-secondary">. . .</span><% } %>
+                                        <% } %>
+                                        <a href="<%= url+'&pno='+(pno+1) %>" class="btn btn-outline-secondary">下一页</a>
+                                    <% } %>
+                                </div>
+                                <% } %>
+                                共 <span><%= product.page.count %></span> 页
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>

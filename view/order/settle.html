@@ -1,0 +1,41 @@
+<section class="cart">
+    <div class="container main-box">
+        <h2>订单结算</h2>
+        <form action="/order/settlePay" method="POST">
+            <table class="table">
+                <thead>
+                    <th>品牌/分类</th>
+                    <th>产品名称</th>
+                    <th>版本</th>
+                    <th>价格</th>
+                    <th>数量</th>
+                    <th>总价</th>
+                </thead>
+                <tbody>
+                    <% totlePrice=0
+                    if(pro.status==1){ 
+                        pro.msg.forEach(function(ele){ 
+                            totlePrice+=(ele.count*ele.salePrice); %>
+                    <tr data-cid="<%= ele.cid %>">
+                        <td><%= ele.bName %>/<%= ele.tName %></td>
+                        <td><%= ele.pname+' | '+ele.pcolor %></td>
+                        <td><%= ele.pedition %></td>
+                        <td><%= ele.salePrice.toFixed(2) %></td>
+                        <td><%= ele.count %></td>
+                        <td class="totlePrice"><%= (ele.count*ele.salePrice).toFixed(2) %></td>
+                    </tr>
+                    <% });} %>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="9">
+                        <div class="text-right check-info">
+                                您选择了 <strong class="count"><%= pro.msg.length %></strong> 件商品，
+                                共计 ￥<strong class="price"><%= totlePrice.toFixed(2) %></strong> 元</div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+            </form>
+    </div>
+</section>

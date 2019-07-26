@@ -1,0 +1,167 @@
+<section class="cart">
+    <div class="container main-box">
+        <h3>
+            我的购物车 &nbsp;<% if(pro.status==1){ %> <small class="text-secondary">共 <%= pro.msg.length %> 条商品</small> <% } %>
+        </h3>
+        <form action="/order/settle" method="GET">
+        <table class="table mt-4">
+            <thead>
+                <th><input type="checkbox" name="cidAll" id="" value="all"> 全选</th>
+                <th>产品名称</th>
+                <th>品牌/分类</th>
+                <th>价格</th>
+                <th>数量</th>
+                <th>总价</th>
+                <th>操作</th>
+            </thead>
+            <tbody>
+                <% if(pro.status==1){ 
+                    pro.msg.forEach(function(ele){ %>
+                <tr data-cid="<%= ele.cid %>">
+                    <td><input type="checkbox" name="cid" value="<%= ele.cid %>"></td>
+                    <td>
+                        <p><a href="/product/detail?pid=<%= ele.pId %>"><%= ele.pname+' | '+ele.pcolor %></a></p>
+                        <p><%= ele.pedition %></p>
+                    </td>
+                    <td><%= ele.bName %>/<%= ele.tName %></td>
+                    <td>
+                        <p class="price"><%= ele.salePrice.toFixed(2) %></p>
+                        <p><%= ele.unitPrice.toFixed(2) %></p>
+                    </td>
+                    <td>
+                        <div class="addCart d-flex flex-column">
+                            <div class="btn-group btn-group-sm">
+                                <div class="btn btn-dark minus">-</div>
+                                <div class="btn btn-outline-dark input"><input type="text" data-cid="<%= ele.cid %>" readonly value="<%= ele.count %>"></div>
+                                <div class="btn btn-dark plus">+</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="totlePrice"><%= (ele.count*ele.salePrice).toFixed(2) %></td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            <a href="javascript:;" data-cid="<%= ele.cid %>" class="btn btn-outline-info delSingle">删除</a>
+                            <a href="/order/settle?cid=<%= ele.cid %>" data-cid="<%= ele.cid %>" class="btn btn-outline-danger">结算</a>
+                        </div>
+                    </td>
+                </tr>
+                <% });} %>
+            </tbody>
+            <tfoot><tr><td colspan="9"></td></tr></tfoot>
+        </table>
+        <div class="operation d-flex justify-content-end">
+            <div class="text-light check-info">
+                您选择了 <strong class="count">0</strong> 件商品，
+                共计 ￥<strong class="price">0</strong> 元</div>
+            <button class="btn btn-warning delBatch ml-4">批量删除</button>
+            <input type="submit" class="btn btn-danger ml-2 settle" value="去结算">
+        </div>
+        </form>
+    </div>
+</section>
+<script>
+$(function(){
+    
+    function Cart(){
+        this.checkBoxArr=[];
+        this.checkPrice=0;
+        this.event=function(){
+            var that=this;
+            $('.addCart .btn').on('click',function(){ that.changeCount($(this)); });
+            $('.cart .delSingle').on('click',function(){ that.delCart([$(this).data('cid')-0]); });
+            $('.cart .delBatch').on('click',function(e){ that.delBatch(e) ;  });
+            $('tbody input[name="cid"]').on('click',function(){ that.checkBoxChange($(this)) });
+            $('thead input[type="checkbox"]').on('change',function(){ that.allCheckChange($(this))})
+        }
+        this.checkBoxChange=function(ele){
+            var that=this;
+            let index=null;
+            if(ele.prop("checked")){
+                this.checkBoxArr.push(Number(ele.val()));
+                this.checkPrice+=ele.closest('tr').find('.totlePrice').html()-0;
+            }else{
+                let index=this.checkBoxArr.indexOf(Number(ele.val()))
+                this.checkBoxArr.splice(index,1);
+                this.checkPrice-=ele.closest('tr').find('.totlePrice').html()-0;
+            }
+            if(this.checkBoxArr.length>0) $('.operation').addClass('show');
+            else $('.operation').removeClass('show');
+            if(this.checkBoxArr.length==$('tbody input[name="cid"]').length) $('thead input[type="checkbox"]').prop('checked',true);
+            else $('thead input[type="checkbox"]').prop('checked',false);
+            $('.operation strong.count').html(this.checkBoxArr.length);
+            $('.operation strong.price').html(this.checkPrice);
+        }
+        this.allCheckChange=function(ele){
+            var status=ele.prop("checked");
+            $('tbody input[name="cid"]').each(function(){
+                if($(this).prop("checked")!=status){
+                    $(this).click();
+                }
+            })
+        }
+        this.delCart=function(cidArr){
+            if(confirm('是否要删除该商品？')){
+                $.ajax({
+                    url:'/order/cart/del',
+                    type:'post',
+                    data:{'cid':cidArr,'ajax':1},
+                    dataType:'json',
+                    success:function(data){
+                        if(data.loginStatus==1) return location.href="/order?callback="+location.href;
+                        if(data.status==200){
+                            if(data.count) $('header .cart .badge').html(data.count);
+                            $('tbody>tr').each(function(){
+                                if(data.delCid.indexOf($(this).data('cid'))>=0) $(this).remove();
+                            })
+                            alert('删除成功');
+                        } 
+                        if(data.status==400) alert('删除失败，请刷新后重试！') 
+                    }
+                });
+            }
+        }
+        this.delBatch=function(e){
+            e.preventDefault();
+            var cidArr=[]
+            $('tbody input[name="cid"]').each(function(){
+                if($(this).prop("checked")){
+                    cidArr.push(Number($(this).val()));
+                }
+            });
+            this.delCart(cidArr); 
+            return false;
+        }
+        this.changeCount=function(ele){
+           
+            var input=ele.siblings('.input').find('input');
+            var count=input.val()-0;
+            var cid=input.data('cid')-0;
+            var method=null;
+            
+            if(ele.hasClass('plus')){
+                input.val(++count);
+                method='plus';
+            }else if(ele.hasClass('minus')){
+                if(count>1){
+                    input.val(--count);
+                    method='minus';
+                }else return this.delCart([cid]); 
+            }
+            $.ajax({
+                url:'/order/cart/'+method,
+                type:'post',
+                data:{cid:cid,'ajax':1},
+                success:function(data){
+                    if(data.loginStatus==1) return location.href="/order?callback="+location.href;
+                    if(data.status==200){
+                        var totlePrice=ele.closest('tr').find('.price').html()*count;
+                        ele.closest('tr').find('.totlePrice').html(totlePrice.toFixed(2))
+                    }else alert('修改失败，请刷新后重试！')
+                    
+                }
+            })
+        }
+    }
+    (new Cart()).event();
+})
+</script>

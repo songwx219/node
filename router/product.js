@@ -5,12 +5,29 @@ const router=express.Router();    //调用路由功能
 /**   ==================== 产品列表 ==================== */
 router.get('/list',(req,res)=>{
     let typeId=req.query.typeId;
-    let pro={}
+    let pro={};
+    const pagesize=2;
+    let pageInfo={
+        pno:req.query.pno?req.query.pno:1,
+    }
     let pageMsg={path:"product/list",title:'产品列表'};
-    pool.query('select * from pro_infor where typeId=?',[typeId],(err,result)=>{
+    const sql= `select *,(
+        select BrandName from pro_brand where id=brandId
+    ) as brand from pro_infor where typeId=?`;
+    pool.query(sql,[typeId],(err,result)=>{
         if(err) throw err;
-        pro=result.length>0?{status:1,msg:result}:{status:0};
-        console.log(pro)
+        if(result.length>0){
+            pageInfo.count=Math.ceil(result.length/pagesize);
+            pageInfo.url=req.originalUrl.replace(/(&pno=).*&?/,'');
+            pro={
+                status:1,
+                msg:result.splice(pagesize*(pageInfo.pno-1),pagesize),
+                page:pageInfo
+            };
+        }else{
+            pro={status:0};
+        }
+        
         res.render('./components/main',{page:pageMsg,login:req.query.login,product:pro})
     }); 
 })
@@ -18,7 +35,7 @@ router.get('/list',(req,res)=>{
 
 /**   ==================== 产品详情 ==================== */
 router.get('/detail',(req,res)=>{
-    let pid=req.query.id;
+    let pid=req.query.pid;
     let pro={}
     let pageMsg={path:"product/detail",title:'detail'};
     pool.query('select * from pro_infor where id=?',[pid],(err,result)=>{

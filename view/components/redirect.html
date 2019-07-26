@@ -1,0 +1,28 @@
+<section class="redirect">
+    <div class="container main-box">
+        <div class="card">
+            <div class="card-header bg-<%= msg.status %>">
+                <%= msg.title %>
+            </div>
+            <div class="card-body text-center">
+                <h5 class="card-title"><%= msg.content %></h5>
+                <p class="card-text"><strong class="time">5</strong>秒后即将跳转</p>
+                <a href="<%= msg.toUrl %>" class="btn btn-primary jump">立即跳转</a>
+            </div>
+        </div>
+    </div>
+    <script>
+    $(function(){
+        let count=5;
+        let timer=setInterval(function(){
+            if(count>0){
+                count--;
+                $('.time').html(count);
+            }else{
+                clearInterval(timer);
+                location.replace($('a.jump').attr('href'));
+            }
+        },1000);
+    })
+    </script>
+</section>
