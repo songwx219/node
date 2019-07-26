@@ -1,13 +1,38 @@
 ﻿# Host: localhost  (Version: 5.5.53)
-# Date: 2019-07-24 18:02:49
+# Date: 2019-07-26 17:48:40
 # Generator: MySQL-Front 5.3  (Build 4.234)
 
 /*!40101 SET NAMES utf8 */;
 
 #
+# Structure for table "cart"
+#
+
+DROP TABLE IF EXISTS `cart`;
+CREATE TABLE `cart` (
+  `cid` int(11) NOT NULL AUTO_INCREMENT,
+  `uId` int(11) NOT NULL,
+  `pId` int(11) NOT NULL,
+  `count` int(11) NOT NULL,
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`cid`),
+  KEY `uId` (`uId`),
+  KEY `pId` (`pId`)
+) ENGINE=MyISAM AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
+
+#
+# Data for table "cart"
+#
+
+/*!40000 ALTER TABLE `cart` DISABLE KEYS */;
+INSERT INTO `cart` VALUES (20,1,1,14,'2019-07-26 17:12:55'),(21,1,2,4,'2019-07-26 14:33:26'),(24,1,5,2,'2019-07-26 14:23:25'),(25,1,6,1,'2019-07-26 14:23:28'),(26,1,8,5,'2019-07-26 17:16:19'),(27,1,7,5,'2019-07-26 15:54:31'),(28,1,9,2,'2019-07-26 17:14:17'),(31,11,1,1,'2019-07-26 17:47:09');
+/*!40000 ALTER TABLE `cart` ENABLE KEYS */;
+
+#
 # Structure for table "code"
 #
 
+DROP TABLE IF EXISTS `code`;
 CREATE TABLE `code` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `value` char(3) DEFAULT NULL,
@@ -19,12 +44,15 @@ CREATE TABLE `code` (
 # Data for table "code"
 #
 
-REPLACE INTO `code` VALUES (1,'309','1'),(2,'356','2'),(3,'378','3'),(4,'419','4'),(5,'487','5'),(6,'414','6'),(7,'322','7'),(8,'431','8'),(9,'305','9'),(10,'496','10'),(11,'352','11'),(12,'500','12'),(13,'400','13'),(14,'385','14'),(15,'376','15'),(16,'411','16'),(17,'491','17'),(18,'391','18'),(19,'313','19'),(20,'468','20'),(21,'396','21'),(22,'408','22'),(23,'401','23'),(24,'383','24'),(25,'466','25'),(26,'440','26');
+/*!40000 ALTER TABLE `code` DISABLE KEYS */;
+INSERT INTO `code` VALUES (1,'309','1'),(2,'356','2'),(3,'378','3'),(4,'419','4'),(5,'487','5'),(6,'414','6'),(7,'322','7'),(8,'431','8'),(9,'305','9'),(10,'496','10'),(11,'352','11'),(12,'500','12'),(13,'400','13'),(14,'385','14'),(15,'376','15'),(16,'411','16'),(17,'491','17'),(18,'391','18'),(19,'313','19'),(20,'468','20'),(21,'396','21'),(22,'408','22'),(23,'401','23'),(24,'383','24'),(25,'466','25'),(26,'440','26');
+/*!40000 ALTER TABLE `code` ENABLE KEYS */;
 
 #
 # Structure for table "pro_brand"
 #
 
+DROP TABLE IF EXISTS `pro_brand`;
 CREATE TABLE `pro_brand` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `BrandName` varchar(32) NOT NULL DEFAULT '',
@@ -36,26 +64,32 @@ CREATE TABLE `pro_brand` (
 # Data for table "pro_brand"
 #
 
-REPLACE INTO `pro_brand` VALUES (1,'华为','huawei'),(2,'OPPO','oppo'),(3,'VIVO','vivo'),(4,'小米','xiaomi'),(5,'苹果','apple,iphone');
+/*!40000 ALTER TABLE `pro_brand` DISABLE KEYS */;
+INSERT INTO `pro_brand` VALUES (1,'华为','huawei'),(2,'OPPO','oppo'),(3,'VIVO','vivo'),(4,'小米','xiaomi'),(5,'iPhone苹果','apple,iphone');
+/*!40000 ALTER TABLE `pro_brand` ENABLE KEYS */;
 
 #
 # Structure for table "pro_detail"
 #
 
+DROP TABLE IF EXISTS `pro_detail`;
 CREATE TABLE `pro_detail` (
-  `Id` int(11) NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`Id`)
+  `dId` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`dId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 #
 # Data for table "pro_detail"
 #
 
+/*!40000 ALTER TABLE `pro_detail` DISABLE KEYS */;
+/*!40000 ALTER TABLE `pro_detail` ENABLE KEYS */;
 
 #
 # Structure for table "pro_infor"
 #
 
+DROP TABLE IF EXISTS `pro_infor`;
 CREATE TABLE `pro_infor` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `typeId` int(11) NOT NULL,
@@ -79,12 +113,15 @@ CREATE TABLE `pro_infor` (
 # Data for table "pro_infor"
 #
 
-REPLACE INTO `pro_infor` VALUES (1,1,1,'华为P30 PRO','全网通8G+128G','天空之镜',5499.00,5288.00,'/upload/product/0002.png','超感光徕卡三摄',1,'2019-07-23 16:55:17'),(2,1,1,'华为P30','全网通8G+64G','赤茶橘',3999.00,3888.00,'/upload/product/0001.png','逆光智能自拍',1,'2019-07-23 16:55:37'),(3,1,5,'Apple iPhone XR','内存128G','黑色',6499.00,5399.00,'/upload/product/0003.png','无线充电|面容ID|双卡双待',1,'2019-07-23 17:30:51'),(4,1,5,'Apple iPhone 7','公开版128GB','玫瑰金色',3299.00,2949.00,'/upload/product/0004.png','A10芯|ios系统|指纹识别',0,'2019-07-24 15:19:54'),(5,1,2,'OPPO Reno','官方标配6G+128G','星云紫',2599.00,2488.00,'/upload/product/0005.png','美颜自拍|双卡双待',1,'2019-07-24 15:17:03'),(6,1,2,'OPPO K3','标准版8G+128G','晨曦白',1899.00,1699.00,'/upload/product/0006.png','升降摄像头|VOOC闪充',0,'2019-07-24 15:19:30'),(7,1,3,'vivo Z5x','官方标配6G+128G','极光色',1698.00,1598.00,'/upload/product/0007.png','极点全面屏|强续航',1,'2019-07-24 15:21:39'),(8,1,3,'vivo iQQQ Neo','官方标配6G+128G','碳纤黑',1998.00,1899.00,'/upload/product/0008.png','液冷散热|超大电池',0,'2019-07-24 15:24:13'),(9,1,4,'小米MI 8','官方标配6G+128G','黑色',1888.00,1799.00,'/upload/product/0009.png','全面屏|后置双摄|屏下指纹',0,'2019-07-24 15:27:29');
+/*!40000 ALTER TABLE `pro_infor` DISABLE KEYS */;
+INSERT INTO `pro_infor` VALUES (1,1,1,'华为P30 PRO','全网通8G+128G','天空之镜',5499.00,5288.00,'/upload/product/0002.png','超感光徕卡三摄',1,'2019-07-23 16:55:17'),(2,1,1,'华为P30','全网通8G+64G','赤茶橘',3999.00,3888.00,'/upload/product/0001.png','逆光智能自拍',1,'2019-07-23 16:55:37'),(3,1,5,'Apple iPhone XR','内存128G','黑色',6499.00,5399.00,'/upload/product/0003.png','无线充电|面容ID|双卡双待',1,'2019-07-23 17:30:51'),(4,1,5,'Apple iPhone 7','公开版128GB','玫瑰金色',3299.00,2949.00,'/upload/product/0004.png','A10芯|ios系统|指纹识别',0,'2019-07-24 15:19:54'),(5,1,2,'OPPO Reno','官方标配6G+128G','星云紫',2599.00,2488.00,'/upload/product/0005.png','美颜自拍|双卡双待',1,'2019-07-24 15:17:03'),(6,1,2,'OPPO K3','标准版8G+128G','晨曦白',1899.00,1699.00,'/upload/product/0006.png','升降摄像头|VOOC闪充',0,'2019-07-24 15:19:30'),(7,1,3,'vivo Z5x','官方标配6G+128G','极光色',1698.00,1598.00,'/upload/product/0007.png','极点全面屏|强续航',1,'2019-07-24 15:21:39'),(8,1,3,'vivo iQQQ Neo','官方标配6G+128G','碳纤黑',1998.00,1899.00,'/upload/product/0008.png','液冷散热|超大电池',0,'2019-07-24 15:24:13'),(9,1,4,'小米MI 8','官方标配6G+128G','黑色',1888.00,1799.00,'/upload/product/0009.png','全面屏|后置双摄|屏下指纹',0,'2019-07-24 15:27:29');
+/*!40000 ALTER TABLE `pro_infor` ENABLE KEYS */;
 
 #
 # Structure for table "pro_type"
 #
 
+DROP TABLE IF EXISTS `pro_type`;
 CREATE TABLE `pro_type` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `TypeName` varchar(8) NOT NULL DEFAULT '',
@@ -95,12 +132,15 @@ CREATE TABLE `pro_type` (
 # Data for table "pro_type"
 #
 
-REPLACE INTO `pro_type` VALUES (1,'手机'),(2,'平板'),(3,'电脑'),(4,'鼠标'),(5,'键盘'),(6,'耳机');
+/*!40000 ALTER TABLE `pro_type` DISABLE KEYS */;
+INSERT INTO `pro_type` VALUES (1,'手机'),(2,'平板'),(3,'电脑'),(4,'鼠标'),(5,'键盘'),(6,'耳机');
+/*!40000 ALTER TABLE `pro_type` ENABLE KEYS */;
 
 #
 # Structure for table "user_infor"
 #
 
+DROP TABLE IF EXISTS `user_infor`;
 CREATE TABLE `user_infor` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` smallint(6) NOT NULL,
@@ -118,12 +158,15 @@ CREATE TABLE `user_infor` (
 # Data for table "user_infor"
 #
 
-REPLACE INTO `user_infor` VALUES (1,1,'张三',NULL,NULL,'upload/user/default_icon.png',NULL),(2,2,'李四',NULL,NULL,'upload/user/default_icon.png',NULL),(3,3,'赵武',NULL,NULL,'upload/user/default_icon.png',NULL),(4,4,'马陆',NULL,NULL,'upload/user/default_icon.png',NULL),(5,5,'杨大局',NULL,NULL,'upload/user/default_icon.png',NULL),(6,6,'杨凯廷',NULL,NULL,'upload/user/default_icon.png',NULL),(7,7,'李晓宇',NULL,NULL,'upload/user/default_icon.png',NULL),(8,8,'李芬',NULL,NULL,'upload/user/default_icon.png',NULL),(9,9,'叶波',NULL,NULL,'upload/user/default_icon.png',NULL),(10,10,'王之兰',NULL,NULL,'upload/user/default_icon.png',NULL),(11,11,'',NULL,NULL,'upload/user/default_icon.png',NULL),(12,12,'张思义',NULL,NULL,'upload/user/default_icon.png',NULL);
+/*!40000 ALTER TABLE `user_infor` DISABLE KEYS */;
+INSERT INTO `user_infor` VALUES (1,1,'张三',NULL,NULL,'upload/user/default_icon.png',NULL),(2,2,'李四',NULL,NULL,'upload/user/default_icon.png',NULL),(3,3,'赵武',NULL,NULL,'upload/user/default_icon.png',NULL),(4,4,'马陆',NULL,NULL,'upload/user/default_icon.png',NULL),(5,5,'杨大局',NULL,NULL,'upload/user/default_icon.png',NULL),(6,6,'杨凯廷',NULL,NULL,'upload/user/default_icon.png',NULL),(7,7,'李晓宇',NULL,NULL,'upload/user/default_icon.png',NULL),(8,8,'李芬',NULL,NULL,'upload/user/default_icon.png',NULL),(9,9,'叶波',NULL,NULL,'upload/user/default_icon.png',NULL),(10,10,'王之兰',NULL,NULL,'upload/user/default_icon.png',NULL),(11,11,'',NULL,NULL,'upload/user/default_icon.png',NULL),(12,12,'张思义',NULL,NULL,'upload/user/default_icon.png',NULL);
+/*!40000 ALTER TABLE `user_infor` ENABLE KEYS */;
 
 #
 # Structure for table "user_reg"
 #
 
+DROP TABLE IF EXISTS `user_reg`;
 CREATE TABLE `user_reg` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uname` varchar(8) NOT NULL,
@@ -136,4 +179,6 @@ CREATE TABLE `user_reg` (
 # Data for table "user_reg"
 #
 
-REPLACE INTO `user_reg` VALUES (1,'张三','123456'),(2,'李四','123456'),(3,'赵武','123456'),(4,'马陆','123456'),(5,'杨大局','123456'),(6,'杨凯廷','123456'),(7,'李晓宇','123456'),(8,'李芬','123456'),(9,'叶波','123456'),(10,'王之兰','123456'),(11,'',''),(12,'张思义','123456');
+/*!40000 ALTER TABLE `user_reg` DISABLE KEYS */;
+INSERT INTO `user_reg` VALUES (1,'张三','123456'),(2,'李四','123456'),(3,'赵武','123456'),(4,'马陆','123456'),(5,'杨大局','123456'),(6,'杨凯廷','123456'),(7,'李晓宇','123456'),(8,'李芬','123456'),(9,'叶波','123456'),(10,'王之兰','123456'),(11,'乔乔','123456'),(12,'张思义','123456');
+/*!40000 ALTER TABLE `user_reg` ENABLE KEYS */;
