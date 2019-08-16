@@ -6,7 +6,7 @@ const router=express.Router();    //调用路由功能
 router.get('/list',(req,res)=>{
     let typeId=req.query.typeId;
     let pro={};
-    const pagesize=2;
+    const pagesize=8;
     let pageInfo={
         pno:req.query.pno?req.query.pno:1,
     }

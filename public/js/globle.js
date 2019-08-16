@@ -13,6 +13,7 @@ $(function(){
             });
             $('.index .goCart').on('click',function(){
                 const pId=$(this).data('pid');
+                console.log(pId)
                 that.goCartAjax(1,pId);
             })
         }
