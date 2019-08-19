@@ -107,8 +107,8 @@ var vm=new Vue({
 $(function(){
     $(window).bind('beforeunload',function(){
         alert(123)
-        return'';
-        });
+        return false;
+    });
     var socket=null;
     var uid=null;
     $('.send').on('click',function(){
