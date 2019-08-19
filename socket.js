@@ -13,18 +13,19 @@ server.on('connection',function(socket){
                 var arr=[];
                 userArr.forEach(function(e){
                     arr.push({uid:e.uid});
-                    e.so.send(JSON.stringify({type:'friends',msg:[{uid:info.uid}]}));
+                    e.so.send(JSON.stringify({type:'friends',msg:[{uid:info.uid}],info:1}));
                 })
                 userArr.push({uid:info.uid,so:socket});
-                socket.send(JSON.stringify({type:'friends',msg:arr}))
+                socket.send(JSON.stringify({type:'friends',msg:arr,info:0}))
             }
             
         }
 
         // 发送消息
-        if(info.type=='trans'){
+        if(info.type=='msg'){
             var soIndex=checkLoginStatus(info.touid);
-            userArr[soIndex-1].so.send(JSON.stringify({type:'trans',fromuid:info.uid,msg:info.msg}));
+            if(soIndex)
+            userArr[soIndex-1].so.send(JSON.stringify({type:'msg',fromuid:info.uid,msg:info.msg}));
         }
 
         if(info.type=='close'){

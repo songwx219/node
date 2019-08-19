@@ -16,9 +16,18 @@
         body{background: #f7f7f7;}
         .connectBox{width: 400px; height: 300px; padding: 100px 50px; margin: 50px auto; background: #fff; box-shadow: 0 0 3px rgba(0, 0, 0, .5);}
         .messageBox{width: 1200px; margin: 20px auto; padding:20px; background: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, .3);}
-        .messageBox .content{height: 400px;; border: 1px solid #ccc; border-bottom: 0; background: #fafafa;}
+        .messageBox .container{min-height: 800px; max-width: 1200px; width: 100%;;}
+        .messageBox .content{height: 400px; border: 1px solid #ccc; border-bottom: 0; background: #fafafa; position: relative; overflow-y: auto;}
+        .messageBox .content .message{width: 100%; min-height: 90%; position: relative; left: 0; bottom: 0;}
         .messageBox .sendMsg{height: 160px; padding: 5px; background: #f0f0f0; border: 1px solid #ccc;}
         .messageBox .sendMsg textarea{height: 100px; width: 100%; padding: 0px 10px; outline: 0; border: 0; background: none; resize: none;}
+        .messageBox .message>div{margin: 15px 0;}
+        .messageBox .message>.right-msg>div{float:right;}
+        .messageBox .message>.left-msg>div{float:left;}
+        .messageBox .tooltip{max-width: 70%; width: auto; display: inline-block;}
+        .messageBox .message>.right-msg .tooltip .arrow::before{border-left-color: #28a745;}
+        .messageBox .tooltip-inner{padding: 8px 10px;}
+        .messageBox .touxiang{width: 40px; height: 40px; line-height: 37px; text-align: center; font-size: 22px; margin:0 15px; border-radius: 50%; background: #ddd;;}
     </style>
 </head>
 <body>
@@ -28,24 +37,34 @@
         <button class="btn btn-block btn-success mt-3" @click="connect">登录</button>
     </div>
     <div class="messageBox" v-if="loginStatus!=0">
-        <button class="close" @click="closeSocket">关闭</button>
+        <button class="close" @click="closeSocket">&times;</button>
         <div class="container">
             <div class="row">
                 <div class="col-2 friend">
                     <h5>hi~ {{uid}}<span class="name"></span></h5>
                     <ul>
-                        <li class="mb-3" v-for="item in msgdata">
-                            <a href="#" :class="['btn','btn-'+(curFriend==item.uid?'success':'danger'),'btn-block']" @click.prevent='curFriend=item.uid' v-if="uid!=item.uid">{{item.uid}}</a>
+                        <li class="mb-3" v-for="(item,index) in msgdata">
+                            <a href="#" :class="['btn','btn-'+(curFriend==item.uid?'success':'danger'),'btn-block']" @click.prevent='changeFriend(item.uid)' v-if="uid!=item.uid">
+                                {{item.uid}}<span v-if='unreadCount[index]!=0' class="badge badge-pill badge-warning">{{unreadCount[index]}}</span>
+                            </a>
                         </li>
                     </ul>
-                    
                 </div>
                 <div class="col-10">
                     <div class="content">
+                        <div class="message" v-if='curFriIndex>=0'>
+                            <div :class="[item[0]==0?'right-msg':'left-msg','clearfix']" v-for="item in msgdata[curFriIndex].msg">
+                                <div class="touxiang">{{item[0]==0?uid:curFriend}}</div>
+                                <div :class="['tooltip','show','bs-tooltip-'+(item[0]==0?'left':'right')]" style="position: relative;">
+                                    <div class="arrow" style="top: 12px;"></div>
+                                    <div :class="['tooltip-inner',item[0]==0?'bg-success':'']">{{ item[1] }}</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="sendMsg">
-                        <textarea name="msg" id="" cols="30" rows="10"></textarea>
-                        <button class="send btn btn-success float-right btn-sm">发送消息</button>
+                        <textarea name="msg" id="" cols="30" rows="10" v-model='message'></textarea>
+                        <button class="send btn btn-success float-right btn-sm" @click='sendMsg'>发送消息</button>
                     </div>
                 </div>
             </div>
@@ -57,11 +76,12 @@
 var vm=new Vue({
     el:'#app',
     data:{
-        loginStatus:0,
-        socket:null,
-        uid:null,
-        curFriend:null,
-        msgdata:[]
+        loginStatus:0,   //是否已登录
+        socket:null,    //socket对象
+        uid:null,       //当前用户
+        curFriend:null, //正在聊天的朋友
+        msgdata:[],     //朋友及聊天内容信息
+        message:'',     //要发送的信息
     },
     methods:{
         connect(){
@@ -74,19 +94,46 @@ var vm=new Vue({
                 }
                 if(data.type=='friends'){
                     data.msg.forEach((e)=>{
-                        this.msgdata.push(e)
-                    })
+                        this.msgdata.push(e);
+                    });
+                    if(data.info==0){
+                        alert('您已上线！')
+                    }else{
+                        alert('您的好友 '+data.msg[0].uid+' 已上线！')
+                    }
+                }
+                if(data.type=='msg'){
+                    for(let i=0;i<this.msgdata.length;i++){
+                        if(this.msgdata[i].uid==data.fromuid){
+                            if(!this.msgdata[i].msg) this.$set(this.msgdata[i],'msg',[])
+                            this.msgdata[i].msg.push([1,data.msg,1]);
+                        }
+                    }
                 }
                 if(data.type=='del'){
                     for(let i=0;i<this.msgdata.length;i++){
                         if(this.msgdata[i].uid==data.msg.uid){
                             this.msgdata.splice(i,1);
+                            alert('您的好友 '+data.msg.uid+' 已下线！')
                             return true;
                         }
                     }
+                    if(this.curFriend==data.msg.uid) this.curFriend=null;
                 }
             }
             
+        },
+        sendMsg(){
+            this.socket.send(JSON.stringify({uid:this.uid,type:'msg',touid:this.curFriend,msg:this.message}));
+            var ele=this.msgdata[this.curFriIndex]
+            if(!ele.msg) this.$set(ele,'msg',[]);
+            ele.msg.push([0,this.message,0]);
+            var msg=ele.msg;
+            this.$set(ele,'msg',msg);
+            this.message='';
+        },
+        changeFriend(id){
+            this.curFriend=id;
         },
         closeSocket(){
             this.socket.send(JSON.stringify({uid:this.uid,type:'close'}));
@@ -95,27 +142,43 @@ var vm=new Vue({
             this.uid=null,
             this.curFriend=null,
             this.msgdata=[]
-            console.log(123)
+            alert('您已退出！')
         }
     },
-    destroyed(){
-        alert(123)
-        this.closeSocket();
-    }
+    computed:{
+        curFriIndex(){
+            for(let i=0; i<this.msgdata.length; i++){
+                if(this.msgdata[i].uid==this.curFriend){
+                    var scrollCount=this.msgdata[i].msg?(this.msgdata[i].msg.length-1)*55:0;
+                    $('.content').animate({scrollTop:scrollCount}, 500);
+                    return i;
+                }
+            }
+        },
+        unreadCount(){
+            var count=[];
+            for(let i=0; i<this.msgdata.length; i++){
+                var number=0;
+                if(i!=this.curFriIndex){
+                    if(this.msgdata[i].msg){
+                        this.msgdata[i].msg.forEach(function(msg){
+                            if(msg[2]==1) number++;
+                        });
+                    }
+                }
+                count.push(number)
+            }
+            return count;
+        }
+    },
+    mounted(){
+        $(window).bind('beforeunload',()=>{
+            this.closeSocket();
+        });
+    },
+    
 })
 
-$(function(){
-    $(window).bind('beforeunload',function(){
-        alert(123)
-        return false;
-    });
-    var socket=null;
-    var uid=null;
-    $('.send').on('click',function(){
-        var toUser=$('.friend a.on').html()-0;
-        socket.send(JSON.stringify({uid:uid,type:'trans',touid:toUser,msg:'hello!'}))
-    });
-})
 </script>
 </body>
 </html>
