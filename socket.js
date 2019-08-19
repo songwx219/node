@@ -7,7 +7,7 @@ server.on('connection',function(socket){
     socket.send(JSON.stringify({type:'login',loginStatus:1}));
     socket.on('message',(msg)=>{
         var info=JSON.parse(msg);
-        // 新上线用户
+        // 新上线用户 
         if(info.type=='login'){
             if(!checkLoginStatus(info.uid)){   //如果用户列表中无此用户
                 var arr=[];
