@@ -134,6 +134,7 @@ var vm=new Vue({
         },
         changeFriend(id){
             this.curFriend=id;
+            // this.msgdata[this.curFriIndex]
         },
         closeSocket(){
             this.socket.send(JSON.stringify({uid:this.uid,type:'close'}));
