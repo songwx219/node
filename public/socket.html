@@ -11,7 +11,7 @@
     <script src="js/jquery.min.js"></script>
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
     <style>
         body{background: #f7f7f7;}
         .connectBox{width: 400px; height: 300px; padding: 100px 50px; margin: 50px auto; background: #fff; box-shadow: 0 0 3px rgba(0, 0, 0, .5);}
@@ -84,17 +84,18 @@ var vm=new Vue({
         message:'',     //要发送的信息
     },
     methods:{
-        connect(){
+        connect:function(){
+            var that=this;
             this.socket=new WebSocket('ws://127.0.0.1:9001');
-            this.socket.onmessage=(msg)=>{
+            this.socket.onmessage=function(msg){
                 var data=JSON.parse(msg.data);
                 if(data.loginStatus==1){
-                    this.socket.send(JSON.stringify({uid:this.uid,type:'login'}));
-                    this.loginStatus=1;
+                    that.socket.send(JSON.stringify({uid:that.uid,type:'login'}));
+                    that.loginStatus=1;
                 }
                 if(data.type=='friends'){
-                    data.msg.forEach((e)=>{
-                        this.msgdata.push(e);
+                    data.msg.forEach(function(e){
+                        that.msgdata.push(e);
                     });
                     if(data.info==0){
                         alert('您已上线！')
@@ -103,27 +104,27 @@ var vm=new Vue({
                     }
                 }
                 if(data.type=='msg'){
-                    for(let i=0;i<this.msgdata.length;i++){
-                        if(this.msgdata[i].uid==data.fromuid){
-                            if(!this.msgdata[i].msg) this.$set(this.msgdata[i],'msg',[])
-                            this.msgdata[i].msg.push([1,data.msg,1]);
+                    for(let i=0;i<that.msgdata.length;i++){
+                        if(that.msgdata[i].uid==data.fromuid){
+                            if(!that.msgdata[i].msg) that.$set(that.msgdata[i],'msg',[])
+                            that.msgdata[i].msg.push([1,data.msg,1]);
                         }
                     }
                 }
                 if(data.type=='del'){
-                    for(let i=0;i<this.msgdata.length;i++){
-                        if(this.msgdata[i].uid==data.msg.uid){
-                            this.msgdata.splice(i,1);
+                    for(let i=0;i<that.msgdata.length;i++){
+                        if(that.msgdata[i].uid==data.msg.uid){
+                            that.msgdata.splice(i,1);
                             alert('您的好友 '+data.msg.uid+' 已下线！')
                             return true;
                         }
                     }
-                    if(this.curFriend==data.msg.uid) this.curFriend=null;
+                    if(that.curFriend==data.msg.uid) that.curFriend=null;
                 }
             }
             
         },
-        sendMsg(){
+        sendMsg:function(){
             this.socket.send(JSON.stringify({uid:this.uid,type:'msg',touid:this.curFriend,msg:this.message}));
             var ele=this.msgdata[this.curFriIndex]
             if(!ele.msg) this.$set(ele,'msg',[]);
@@ -132,11 +133,11 @@ var vm=new Vue({
             this.$set(ele,'msg',msg);
             this.message='';
         },
-        changeFriend(id){
+        changeFriend:function(id){
             this.curFriend=id;
             // this.msgdata[this.curFriIndex]
         },
-        closeSocket(){
+        closeSocket:function(){
             this.socket.send(JSON.stringify({uid:this.uid,type:'close'}));
             this.socket=null;
             this.loginStatus=0;
@@ -147,7 +148,7 @@ var vm=new Vue({
         }
     },
     computed:{
-        curFriIndex(){
+        curFriIndex:function(){
             for(let i=0; i<this.msgdata.length; i++){
                 if(this.msgdata[i].uid==this.curFriend){
                     var scrollCount=this.msgdata[i].msg?(this.msgdata[i].msg.length-1)*55:0;
@@ -156,7 +157,7 @@ var vm=new Vue({
                 }
             }
         },
-        unreadCount(){
+        unreadCount:function(){
             var count=[];
             for(let i=0; i<this.msgdata.length; i++){
                 var number=0;
@@ -172,9 +173,10 @@ var vm=new Vue({
             return count;
         }
     },
-    mounted(){
-        $(window).bind('beforeunload',()=>{
-            this.closeSocket();
+    mounted:function(){
+        var that=this
+        $(window).bind('beforeunload',function(){
+            that.closeSocket();
         });
     },
     
